@@ -91,6 +91,38 @@ public final class CalculatorServiceGrpc {
      return getPrimeNumbeDecompositionMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.thebytecloud.calculator.ComputeAverageRequest,
+      com.thebytecloud.calculator.ComputeAverageResponse> getComputeAverageMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "ComputeAverage",
+      requestType = com.thebytecloud.calculator.ComputeAverageRequest.class,
+      responseType = com.thebytecloud.calculator.ComputeAverageResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.CLIENT_STREAMING)
+  public static io.grpc.MethodDescriptor<com.thebytecloud.calculator.ComputeAverageRequest,
+      com.thebytecloud.calculator.ComputeAverageResponse> getComputeAverageMethod() {
+    io.grpc.MethodDescriptor<com.thebytecloud.calculator.ComputeAverageRequest, com.thebytecloud.calculator.ComputeAverageResponse> getComputeAverageMethod;
+    if ((getComputeAverageMethod = CalculatorServiceGrpc.getComputeAverageMethod) == null) {
+      synchronized (CalculatorServiceGrpc.class) {
+        if ((getComputeAverageMethod = CalculatorServiceGrpc.getComputeAverageMethod) == null) {
+          CalculatorServiceGrpc.getComputeAverageMethod = getComputeAverageMethod = 
+              io.grpc.MethodDescriptor.<com.thebytecloud.calculator.ComputeAverageRequest, com.thebytecloud.calculator.ComputeAverageResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.CLIENT_STREAMING)
+              .setFullMethodName(generateFullMethodName(
+                  "calculator.CalculatorService", "ComputeAverage"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.thebytecloud.calculator.ComputeAverageRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.thebytecloud.calculator.ComputeAverageResponse.getDefaultInstance()))
+                  .setSchemaDescriptor(new CalculatorServiceMethodDescriptorSupplier("ComputeAverage"))
+                  .build();
+          }
+        }
+     }
+     return getComputeAverageMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -138,6 +170,16 @@ public final class CalculatorServiceGrpc {
       asyncUnimplementedUnaryCall(getPrimeNumbeDecompositionMethod(), responseObserver);
     }
 
+    /**
+     * <pre>
+     *Client streaming rpc
+     * </pre>
+     */
+    public io.grpc.stub.StreamObserver<com.thebytecloud.calculator.ComputeAverageRequest> computeAverage(
+        io.grpc.stub.StreamObserver<com.thebytecloud.calculator.ComputeAverageResponse> responseObserver) {
+      return asyncUnimplementedStreamingCall(getComputeAverageMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -154,6 +196,13 @@ public final class CalculatorServiceGrpc {
                 com.thebytecloud.calculator.PrimeNumberDecompositionRequest,
                 com.thebytecloud.calculator.PrimeNumberDecompositionResponse>(
                   this, METHODID_PRIME_NUMBE_DECOMPOSITION)))
+          .addMethod(
+            getComputeAverageMethod(),
+            asyncClientStreamingCall(
+              new MethodHandlers<
+                com.thebytecloud.calculator.ComputeAverageRequest,
+                com.thebytecloud.calculator.ComputeAverageResponse>(
+                  this, METHODID_COMPUTE_AVERAGE)))
           .build();
     }
   }
@@ -196,6 +245,17 @@ public final class CalculatorServiceGrpc {
         io.grpc.stub.StreamObserver<com.thebytecloud.calculator.PrimeNumberDecompositionResponse> responseObserver) {
       asyncServerStreamingCall(
           getChannel().newCall(getPrimeNumbeDecompositionMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     *Client streaming rpc
+     * </pre>
+     */
+    public io.grpc.stub.StreamObserver<com.thebytecloud.calculator.ComputeAverageRequest> computeAverage(
+        io.grpc.stub.StreamObserver<com.thebytecloud.calculator.ComputeAverageResponse> responseObserver) {
+      return asyncClientStreamingCall(
+          getChannel().newCall(getComputeAverageMethod(), getCallOptions()), responseObserver);
     }
   }
 
@@ -271,6 +331,7 @@ public final class CalculatorServiceGrpc {
 
   private static final int METHODID_SUM = 0;
   private static final int METHODID_PRIME_NUMBE_DECOMPOSITION = 1;
+  private static final int METHODID_COMPUTE_AVERAGE = 2;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -307,6 +368,9 @@ public final class CalculatorServiceGrpc {
     public io.grpc.stub.StreamObserver<Req> invoke(
         io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
+        case METHODID_COMPUTE_AVERAGE:
+          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.computeAverage(
+              (io.grpc.stub.StreamObserver<com.thebytecloud.calculator.ComputeAverageResponse>) responseObserver);
         default:
           throw new AssertionError();
       }
@@ -360,6 +424,7 @@ public final class CalculatorServiceGrpc {
               .setSchemaDescriptor(new CalculatorServiceFileDescriptorSupplier())
               .addMethod(getSumMethod())
               .addMethod(getPrimeNumbeDecompositionMethod())
+              .addMethod(getComputeAverageMethod())
               .build();
         }
       }

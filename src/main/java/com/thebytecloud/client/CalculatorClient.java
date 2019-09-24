@@ -3,8 +3,11 @@ package com.thebytecloud.client;
 import com.thebytecloud.calculator.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.stub.StreamObserver;
 
 import java.util.Iterator;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class CalculatorClient {
 
@@ -23,7 +26,8 @@ public class CalculatorClient {
 
         CalculatorClient calculatorClient = new CalculatorClient(managedChannel);
         //calculatorClient.unaryCall();
-        calculatorClient.serverStreamingCall();
+        //calculatorClient.serverStreamingCall();
+        calculatorClient.clientStreamingCall();
 
     }
 
@@ -54,6 +58,51 @@ public class CalculatorClient {
         iterator.forEachRemaining(primeNumberDecompositionResponse -> {
                     System.out.println("Prime Factor = " + primeNumberDecompositionResponse);
                 });
+
+    }
+
+    private void clientStreamingCall() {
+        final CalculatorServiceGrpc.CalculatorServiceStub asyncStub = CalculatorServiceGrpc.newStub(managedChannel);
+
+        CountDownLatch latch = new CountDownLatch(1);
+
+        //Creating response observer. This will be called whenever response received from server.
+        StreamObserver<ComputeAverageResponse> responseObserver = new StreamObserver<ComputeAverageResponse>() {
+            @Override
+            public void onNext(ComputeAverageResponse computeAverageResponse) {
+                System.out.println("Received average = "+computeAverageResponse.getAverage());
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+            }
+
+            @Override
+            public void onCompleted() {
+                System.out.println("Server has completed sending response!");
+                latch.countDown();
+            }
+        };
+
+        //Getting request observer to send the request messages
+        StreamObserver<ComputeAverageRequest> requestObserver = asyncStub.computeAverage(responseObserver);
+
+        //sending 10000 messages to server (Client streaming)
+        for(int i = 0; i < 10000; i++) {
+            requestObserver.onNext(ComputeAverageRequest.newBuilder()
+                    .setNumber(i)
+                    .build());
+        }
+
+        //done with streaming. should call completed.
+        requestObserver.onCompleted();
+
+        try {
+            latch.await(3, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
