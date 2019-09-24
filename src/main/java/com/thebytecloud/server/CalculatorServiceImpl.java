@@ -1,8 +1,6 @@
 package com.thebytecloud.server;
 
-import com.thebytecloud.calculator.CalculatorServiceGrpc;
-import com.thebytecloud.calculator.SumRequest;
-import com.thebytecloud.calculator.SumResponse;
+import com.thebytecloud.calculator.*;
 import io.grpc.stub.StreamObserver;
 
 public class CalculatorServiceImpl extends CalculatorServiceGrpc.CalculatorServiceImplBase {
@@ -15,6 +13,30 @@ public class CalculatorServiceImpl extends CalculatorServiceGrpc.CalculatorServi
                 .build();
 
         responseObserver.onNext(sumResponse);
+
+        responseObserver.onCompleted();
+
+    }
+
+    @Override
+    public void primeNumbeDecomposition(PrimeNumberDecompositionRequest request, StreamObserver<PrimeNumberDecompositionResponse> responseObserver) {
+
+        long number = request.getNumber();
+        long divisor = 2L;
+
+        while(number > 1) {
+            if(number % divisor == 0){
+                number = number / divisor;
+                responseObserver.onNext(
+                        PrimeNumberDecompositionResponse.newBuilder()
+                                .setPrimeFactor(divisor)
+                                .build()
+                );
+                System.out.println("Prime Factor = "+ divisor);
+            } else {
+                divisor = divisor + 1;
+            }
+        }
 
         responseObserver.onCompleted();
 

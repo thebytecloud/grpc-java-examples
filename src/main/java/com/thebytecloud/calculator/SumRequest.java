@@ -4,6 +4,10 @@
 package com.thebytecloud.calculator;
 
 /**
+ * <pre>
+ *Unary call messages
+ * </pre>
+ *
  * Protobuf type {@code calculator.SumRequest}
  */
 public  final class SumRequest extends
@@ -272,6 +276,10 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
+   * <pre>
+   *Unary call messages
+   * </pre>
+   *
    * Protobuf type {@code calculator.SumRequest}
    */
   public static final class Builder extends

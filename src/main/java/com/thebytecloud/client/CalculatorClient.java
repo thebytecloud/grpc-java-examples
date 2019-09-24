@@ -1,10 +1,10 @@
 package com.thebytecloud.client;
 
-import com.thebytecloud.calculator.CalculatorServiceGrpc;
-import com.thebytecloud.calculator.SumRequest;
-import com.thebytecloud.calculator.SumResponse;
+import com.thebytecloud.calculator.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+
+import java.util.Iterator;
 
 public class CalculatorClient {
 
@@ -22,11 +22,12 @@ public class CalculatorClient {
                 .build();
 
         CalculatorClient calculatorClient = new CalculatorClient(managedChannel);
-        calculatorClient.doUnaryCall();
+        //calculatorClient.unaryCall();
+        calculatorClient.serverStreamingCall();
 
     }
 
-    private void doUnaryCall() {
+    private void unaryCall() {
         CalculatorServiceGrpc.CalculatorServiceBlockingStub stub = CalculatorServiceGrpc.newBlockingStub(managedChannel);
 
         SumRequest request = SumRequest.newBuilder()
@@ -39,4 +40,21 @@ public class CalculatorClient {
         System.out.println(request.getFirstNumber() + " + " + request.getSecondNumber() + "=" + response.getSumResult());
 
     }
+
+    private void serverStreamingCall() {
+
+        long number = 500L;
+
+        CalculatorServiceGrpc.CalculatorServiceBlockingStub stub = CalculatorServiceGrpc.newBlockingStub(managedChannel);
+
+        PrimeNumberDecompositionRequest request = PrimeNumberDecompositionRequest.newBuilder()
+                .setNumber(number).build();
+
+        final Iterator<PrimeNumberDecompositionResponse> iterator = stub.primeNumbeDecomposition(request);
+        iterator.forEachRemaining(primeNumberDecompositionResponse -> {
+                    System.out.println("Prime Factor = " + primeNumberDecompositionResponse);
+                });
+
+    }
+
 }

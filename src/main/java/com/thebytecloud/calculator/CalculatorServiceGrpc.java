@@ -59,6 +59,38 @@ public final class CalculatorServiceGrpc {
      return getSumMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.thebytecloud.calculator.PrimeNumberDecompositionRequest,
+      com.thebytecloud.calculator.PrimeNumberDecompositionResponse> getPrimeNumbeDecompositionMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "PrimeNumbeDecomposition",
+      requestType = com.thebytecloud.calculator.PrimeNumberDecompositionRequest.class,
+      responseType = com.thebytecloud.calculator.PrimeNumberDecompositionResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+  public static io.grpc.MethodDescriptor<com.thebytecloud.calculator.PrimeNumberDecompositionRequest,
+      com.thebytecloud.calculator.PrimeNumberDecompositionResponse> getPrimeNumbeDecompositionMethod() {
+    io.grpc.MethodDescriptor<com.thebytecloud.calculator.PrimeNumberDecompositionRequest, com.thebytecloud.calculator.PrimeNumberDecompositionResponse> getPrimeNumbeDecompositionMethod;
+    if ((getPrimeNumbeDecompositionMethod = CalculatorServiceGrpc.getPrimeNumbeDecompositionMethod) == null) {
+      synchronized (CalculatorServiceGrpc.class) {
+        if ((getPrimeNumbeDecompositionMethod = CalculatorServiceGrpc.getPrimeNumbeDecompositionMethod) == null) {
+          CalculatorServiceGrpc.getPrimeNumbeDecompositionMethod = getPrimeNumbeDecompositionMethod = 
+              io.grpc.MethodDescriptor.<com.thebytecloud.calculator.PrimeNumberDecompositionRequest, com.thebytecloud.calculator.PrimeNumberDecompositionResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+              .setFullMethodName(generateFullMethodName(
+                  "calculator.CalculatorService", "PrimeNumbeDecomposition"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.thebytecloud.calculator.PrimeNumberDecompositionRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.thebytecloud.calculator.PrimeNumberDecompositionResponse.getDefaultInstance()))
+                  .setSchemaDescriptor(new CalculatorServiceMethodDescriptorSupplier("PrimeNumbeDecomposition"))
+                  .build();
+          }
+        }
+     }
+     return getPrimeNumbeDecompositionMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -87,10 +119,23 @@ public final class CalculatorServiceGrpc {
   public static abstract class CalculatorServiceImplBase implements io.grpc.BindableService {
 
     /**
+     * <pre>
+     *Unary call rpc
+     * </pre>
      */
     public void sum(com.thebytecloud.calculator.SumRequest request,
         io.grpc.stub.StreamObserver<com.thebytecloud.calculator.SumResponse> responseObserver) {
       asyncUnimplementedUnaryCall(getSumMethod(), responseObserver);
+    }
+
+    /**
+     * <pre>
+     *Server streaming rpc
+     * </pre>
+     */
+    public void primeNumbeDecomposition(com.thebytecloud.calculator.PrimeNumberDecompositionRequest request,
+        io.grpc.stub.StreamObserver<com.thebytecloud.calculator.PrimeNumberDecompositionResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getPrimeNumbeDecompositionMethod(), responseObserver);
     }
 
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
@@ -102,6 +147,13 @@ public final class CalculatorServiceGrpc {
                 com.thebytecloud.calculator.SumRequest,
                 com.thebytecloud.calculator.SumResponse>(
                   this, METHODID_SUM)))
+          .addMethod(
+            getPrimeNumbeDecompositionMethod(),
+            asyncServerStreamingCall(
+              new MethodHandlers<
+                com.thebytecloud.calculator.PrimeNumberDecompositionRequest,
+                com.thebytecloud.calculator.PrimeNumberDecompositionResponse>(
+                  this, METHODID_PRIME_NUMBE_DECOMPOSITION)))
           .build();
     }
   }
@@ -125,11 +177,25 @@ public final class CalculatorServiceGrpc {
     }
 
     /**
+     * <pre>
+     *Unary call rpc
+     * </pre>
      */
     public void sum(com.thebytecloud.calculator.SumRequest request,
         io.grpc.stub.StreamObserver<com.thebytecloud.calculator.SumResponse> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getSumMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     *Server streaming rpc
+     * </pre>
+     */
+    public void primeNumbeDecomposition(com.thebytecloud.calculator.PrimeNumberDecompositionRequest request,
+        io.grpc.stub.StreamObserver<com.thebytecloud.calculator.PrimeNumberDecompositionResponse> responseObserver) {
+      asyncServerStreamingCall(
+          getChannel().newCall(getPrimeNumbeDecompositionMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
@@ -152,10 +218,24 @@ public final class CalculatorServiceGrpc {
     }
 
     /**
+     * <pre>
+     *Unary call rpc
+     * </pre>
      */
     public com.thebytecloud.calculator.SumResponse sum(com.thebytecloud.calculator.SumRequest request) {
       return blockingUnaryCall(
           getChannel(), getSumMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     *Server streaming rpc
+     * </pre>
+     */
+    public java.util.Iterator<com.thebytecloud.calculator.PrimeNumberDecompositionResponse> primeNumbeDecomposition(
+        com.thebytecloud.calculator.PrimeNumberDecompositionRequest request) {
+      return blockingServerStreamingCall(
+          getChannel(), getPrimeNumbeDecompositionMethod(), getCallOptions(), request);
     }
   }
 
@@ -178,6 +258,9 @@ public final class CalculatorServiceGrpc {
     }
 
     /**
+     * <pre>
+     *Unary call rpc
+     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<com.thebytecloud.calculator.SumResponse> sum(
         com.thebytecloud.calculator.SumRequest request) {
@@ -187,6 +270,7 @@ public final class CalculatorServiceGrpc {
   }
 
   private static final int METHODID_SUM = 0;
+  private static final int METHODID_PRIME_NUMBE_DECOMPOSITION = 1;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -208,6 +292,10 @@ public final class CalculatorServiceGrpc {
         case METHODID_SUM:
           serviceImpl.sum((com.thebytecloud.calculator.SumRequest) request,
               (io.grpc.stub.StreamObserver<com.thebytecloud.calculator.SumResponse>) responseObserver);
+          break;
+        case METHODID_PRIME_NUMBE_DECOMPOSITION:
+          serviceImpl.primeNumbeDecomposition((com.thebytecloud.calculator.PrimeNumberDecompositionRequest) request,
+              (io.grpc.stub.StreamObserver<com.thebytecloud.calculator.PrimeNumberDecompositionResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -271,6 +359,7 @@ public final class CalculatorServiceGrpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new CalculatorServiceFileDescriptorSupplier())
               .addMethod(getSumMethod())
+              .addMethod(getPrimeNumbeDecompositionMethod())
               .build();
         }
       }
