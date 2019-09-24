@@ -17,7 +17,6 @@ message SumResponse {
 }
 
 //Server streaming messages
-
 message PrimeNumberDecompositionRequest {
     int64 number = 1;
 }
@@ -36,8 +35,16 @@ message ComputeAverageResponse {
 }
 
 //Bi directional streaming messages
+message FindMaxRequest {
+    int32 number = 1;
+}
+
+message FindMaxResponse {
+    int32 response = 1;
+}
 
 service CalculatorService {
+
     //Unary call rpc
     rpc Sum(SumRequest) returns (SumResponse) {};
 
@@ -48,4 +55,6 @@ service CalculatorService {
     rpc ComputeAverage(stream ComputeAverageRequest) returns (ComputeAverageResponse) {};
 
     //Bi directional rpc
+    rpc FindMax(stream FindMaxRequest) returns (stream FindMaxResponse) {};
+
 }

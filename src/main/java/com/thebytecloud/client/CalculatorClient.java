@@ -5,6 +5,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +28,8 @@ public class CalculatorClient {
         CalculatorClient calculatorClient = new CalculatorClient(managedChannel);
         //calculatorClient.unaryCall();
         //calculatorClient.serverStreamingCall();
-        calculatorClient.clientStreamingCall();
+        //calculatorClient.clientStreamingCall();
+        calculatorClient.biDirectionalStreamingCall();
 
     }
 
@@ -56,12 +58,13 @@ public class CalculatorClient {
 
         final Iterator<PrimeNumberDecompositionResponse> iterator = stub.primeNumbeDecomposition(request);
         iterator.forEachRemaining(primeNumberDecompositionResponse -> {
-                    System.out.println("Prime Factor = " + primeNumberDecompositionResponse);
-                });
+            System.out.println("Prime Factor = " + primeNumberDecompositionResponse);
+        });
 
     }
 
     private void clientStreamingCall() {
+
         final CalculatorServiceGrpc.CalculatorServiceStub asyncStub = CalculatorServiceGrpc.newStub(managedChannel);
 
         CountDownLatch latch = new CountDownLatch(1);
@@ -70,12 +73,12 @@ public class CalculatorClient {
         StreamObserver<ComputeAverageResponse> responseObserver = new StreamObserver<ComputeAverageResponse>() {
             @Override
             public void onNext(ComputeAverageResponse computeAverageResponse) {
-                System.out.println("Received average = "+computeAverageResponse.getAverage());
+                System.out.println("Received average = " + computeAverageResponse.getAverage());
             }
 
             @Override
             public void onError(Throwable throwable) {
-
+                latch.countDown();
             }
 
             @Override
@@ -89,13 +92,61 @@ public class CalculatorClient {
         StreamObserver<ComputeAverageRequest> requestObserver = asyncStub.computeAverage(responseObserver);
 
         //sending 10000 messages to server (Client streaming)
-        for(int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 10000; i++) {
             requestObserver.onNext(ComputeAverageRequest.newBuilder()
                     .setNumber(i)
                     .build());
         }
 
         //done with streaming. should call completed.
+        requestObserver.onCompleted();
+
+        try {
+            latch.await(3, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void biDirectionalStreamingCall() {
+
+        final CalculatorServiceGrpc.CalculatorServiceStub asyncStub = CalculatorServiceGrpc.newStub(managedChannel);
+
+        final CountDownLatch latch = new CountDownLatch(1);
+
+        StreamObserver<FindMaxResponse> responseObserver = new StreamObserver<FindMaxResponse>() {
+            @Override
+            public void onNext(FindMaxResponse findMaxResponse) {
+                System.out.println("Got maximum from server = "+findMaxResponse.getResponse());
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                latch.countDown();
+            }
+
+            @Override
+            public void onCompleted() {
+                System.out.println("Server is done with messages");
+                latch.countDown();
+            }
+        };
+
+        StreamObserver<FindMaxRequest> requestObserver = asyncStub.findMax(responseObserver);
+
+        Arrays.asList(3,5,17,9,8,30,12).forEach(number -> {
+            requestObserver.onNext(FindMaxRequest.newBuilder()
+                    .setNumber(number)
+                    .build());
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        });
+
         requestObserver.onCompleted();
 
         try {
