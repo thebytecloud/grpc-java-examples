@@ -155,6 +155,38 @@ public final class CalculatorServiceGrpc {
      return getFindMaxMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.thebytecloud.calculator.SquareRootRequest,
+      com.thebytecloud.calculator.SquareRootResponse> getFindSquareRootMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "FindSquareRoot",
+      requestType = com.thebytecloud.calculator.SquareRootRequest.class,
+      responseType = com.thebytecloud.calculator.SquareRootResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.thebytecloud.calculator.SquareRootRequest,
+      com.thebytecloud.calculator.SquareRootResponse> getFindSquareRootMethod() {
+    io.grpc.MethodDescriptor<com.thebytecloud.calculator.SquareRootRequest, com.thebytecloud.calculator.SquareRootResponse> getFindSquareRootMethod;
+    if ((getFindSquareRootMethod = CalculatorServiceGrpc.getFindSquareRootMethod) == null) {
+      synchronized (CalculatorServiceGrpc.class) {
+        if ((getFindSquareRootMethod = CalculatorServiceGrpc.getFindSquareRootMethod) == null) {
+          CalculatorServiceGrpc.getFindSquareRootMethod = getFindSquareRootMethod = 
+              io.grpc.MethodDescriptor.<com.thebytecloud.calculator.SquareRootRequest, com.thebytecloud.calculator.SquareRootResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "calculator.CalculatorService", "FindSquareRoot"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.thebytecloud.calculator.SquareRootRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.thebytecloud.calculator.SquareRootResponse.getDefaultInstance()))
+                  .setSchemaDescriptor(new CalculatorServiceMethodDescriptorSupplier("FindSquareRoot"))
+                  .build();
+          }
+        }
+     }
+     return getFindSquareRootMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -222,6 +254,17 @@ public final class CalculatorServiceGrpc {
       return asyncUnimplementedStreamingCall(getFindMaxMethod(), responseObserver);
     }
 
+    /**
+     * <pre>
+     *Error handling
+     *Error will be sent if request number is negative. Error type will be  INVALID_ARGUMENT
+     * </pre>
+     */
+    public void findSquareRoot(com.thebytecloud.calculator.SquareRootRequest request,
+        io.grpc.stub.StreamObserver<com.thebytecloud.calculator.SquareRootResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getFindSquareRootMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -252,6 +295,13 @@ public final class CalculatorServiceGrpc {
                 com.thebytecloud.calculator.FindMaxRequest,
                 com.thebytecloud.calculator.FindMaxResponse>(
                   this, METHODID_FIND_MAX)))
+          .addMethod(
+            getFindSquareRootMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.thebytecloud.calculator.SquareRootRequest,
+                com.thebytecloud.calculator.SquareRootResponse>(
+                  this, METHODID_FIND_SQUARE_ROOT)))
           .build();
     }
   }
@@ -317,6 +367,18 @@ public final class CalculatorServiceGrpc {
       return asyncBidiStreamingCall(
           getChannel().newCall(getFindMaxMethod(), getCallOptions()), responseObserver);
     }
+
+    /**
+     * <pre>
+     *Error handling
+     *Error will be sent if request number is negative. Error type will be  INVALID_ARGUMENT
+     * </pre>
+     */
+    public void findSquareRoot(com.thebytecloud.calculator.SquareRootRequest request,
+        io.grpc.stub.StreamObserver<com.thebytecloud.calculator.SquareRootResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getFindSquareRootMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -357,6 +419,17 @@ public final class CalculatorServiceGrpc {
       return blockingServerStreamingCall(
           getChannel(), getPrimeNumbeDecompositionMethod(), getCallOptions(), request);
     }
+
+    /**
+     * <pre>
+     *Error handling
+     *Error will be sent if request number is negative. Error type will be  INVALID_ARGUMENT
+     * </pre>
+     */
+    public com.thebytecloud.calculator.SquareRootResponse findSquareRoot(com.thebytecloud.calculator.SquareRootRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getFindSquareRootMethod(), getCallOptions(), request);
+    }
   }
 
   /**
@@ -387,12 +460,25 @@ public final class CalculatorServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(getSumMethod(), getCallOptions()), request);
     }
+
+    /**
+     * <pre>
+     *Error handling
+     *Error will be sent if request number is negative. Error type will be  INVALID_ARGUMENT
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.thebytecloud.calculator.SquareRootResponse> findSquareRoot(
+        com.thebytecloud.calculator.SquareRootRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getFindSquareRootMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_SUM = 0;
   private static final int METHODID_PRIME_NUMBE_DECOMPOSITION = 1;
-  private static final int METHODID_COMPUTE_AVERAGE = 2;
-  private static final int METHODID_FIND_MAX = 3;
+  private static final int METHODID_FIND_SQUARE_ROOT = 2;
+  private static final int METHODID_COMPUTE_AVERAGE = 3;
+  private static final int METHODID_FIND_MAX = 4;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -418,6 +504,10 @@ public final class CalculatorServiceGrpc {
         case METHODID_PRIME_NUMBE_DECOMPOSITION:
           serviceImpl.primeNumbeDecomposition((com.thebytecloud.calculator.PrimeNumberDecompositionRequest) request,
               (io.grpc.stub.StreamObserver<com.thebytecloud.calculator.PrimeNumberDecompositionResponse>) responseObserver);
+          break;
+        case METHODID_FIND_SQUARE_ROOT:
+          serviceImpl.findSquareRoot((com.thebytecloud.calculator.SquareRootRequest) request,
+              (io.grpc.stub.StreamObserver<com.thebytecloud.calculator.SquareRootResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -490,6 +580,7 @@ public final class CalculatorServiceGrpc {
               .addMethod(getPrimeNumbeDecompositionMethod())
               .addMethod(getComputeAverageMethod())
               .addMethod(getFindMaxMethod())
+              .addMethod(getFindSquareRootMethod())
               .build();
         }
       }

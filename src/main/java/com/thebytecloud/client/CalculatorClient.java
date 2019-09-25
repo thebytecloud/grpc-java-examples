@@ -3,6 +3,7 @@ package com.thebytecloud.client;
 import com.thebytecloud.calculator.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
 import java.util.Arrays;
@@ -29,7 +30,8 @@ public class CalculatorClient {
         //calculatorClient.unaryCall();
         //calculatorClient.serverStreamingCall();
         //calculatorClient.clientStreamingCall();
-        calculatorClient.biDirectionalStreamingCall();
+        //calculatorClient.biDirectionalStreamingCall();
+        calculatorClient.errorHandling();
 
     }
 
@@ -152,6 +154,19 @@ public class CalculatorClient {
         try {
             latch.await(3, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void errorHandling() {
+        CalculatorServiceGrpc.CalculatorServiceBlockingStub stub = CalculatorServiceGrpc.newBlockingStub(managedChannel);
+
+        int number = -1;
+        try{
+            stub.findSquareRoot(SquareRootRequest.newBuilder().setNumber(number).build());
+        } catch (StatusRuntimeException e){
+            System.out.println("Exception on Square Root..."+ e.getLocalizedMessage());
             e.printStackTrace();
         }
 
