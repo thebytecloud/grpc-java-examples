@@ -1,0 +1,5 @@
+FROM openjdk:8-jdk-alpine
+VOLUME /tmp
+ADD target/grpc-java-examples-1.0-SNAPSHOT-jar-with-dependencies.jar grpc-docker-app.jar
+ENV JAVA_OPTS=""
+ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -cp /grpc-docker-app.jar com.thebytecloud.server.CalculatorServer" ]

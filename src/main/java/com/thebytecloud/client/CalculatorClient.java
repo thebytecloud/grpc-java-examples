@@ -1,6 +1,9 @@
 package com.thebytecloud.client;
 
 import com.thebytecloud.calculator.*;
+import com.thebytecloud.greeting.GreetingServiceGrpc;
+import com.thebytecloud.greeting.HelloRequest;
+import com.thebytecloud.greeting.HelloResponse;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
@@ -20,9 +23,23 @@ public class CalculatorClient {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
-        ManagedChannel managedChannel = ManagedChannelBuilder.forAddress("localhost", 7070)
+        String server = "localhost";
+        int serverPort = 7070;
+
+        if(System.getenv("SERVER_PORT") != null)
+            serverPort = Integer.parseInt(System.getenv("SERVER_PORT"));
+
+        if(System.getenv("SERVER") != null)
+            server = System.getenv("SERVER");
+
+
+        System.out.println("server = " + server+":"+serverPort);
+
+        Thread.sleep(2000);
+
+        ManagedChannel managedChannel = ManagedChannelBuilder.forAddress(server, serverPort)
                 .usePlaintext()
                 .build();
 
@@ -31,7 +48,8 @@ public class CalculatorClient {
         //calculatorClient.serverStreamingCall();
         //calculatorClient.clientStreamingCall();
         //calculatorClient.biDirectionalStreamingCall();
-        calculatorClient.errorHandling();
+        //calculatorClient.errorHandling();
+        calculatorClient.sayHello();
 
     }
 
@@ -170,6 +188,19 @@ public class CalculatorClient {
             e.printStackTrace();
         }
 
+    }
+
+    private void sayHello() throws InterruptedException {
+        final GreetingServiceGrpc.GreetingServiceBlockingStub
+                blockingStub = GreetingServiceGrpc.newBlockingStub(managedChannel);
+
+        final HelloRequest request = HelloRequest.newBuilder().setName("Nantha").build();
+
+        while (true){
+            HelloResponse response = blockingStub.sayHello(request);
+            System.out.println("response = " + response.getResponse());
+            Thread.sleep(2000);
+        }
     }
 
 }

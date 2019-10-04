@@ -1,0 +1,68 @@
+version: '3.1'
+
+networks:
+  thebytecloud:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
+services:
+  haproxy:
+    image: haproxy
+    container_name: haproxy
+    depends_on:
+      - grpc-server1
+      - grpc-server2
+    volumes:
+      - ./haproxy:/usr/local/etc/haproxy:ro
+    ports:
+      - "8000:8000"
+      - "9000:9000"
+    networks:
+      thebytecloud:
+        ipv4_address: 172.20.0.2
+
+  grpc-server1:
+    build:
+      context: .
+      dockerfile: server.docker
+    image: thebytecloud/grpc-server:latest
+    container_name: grpc-server1
+    ports:
+      - "7070:7070"
+    environment:
+      - BIND_PORT=7070
+    networks:
+      thebytecloud:
+        ipv4_address: 172.20.0.3
+
+  grpc-server2:
+    build:
+      context: .
+      dockerfile: server.docker
+    image: thebytecloud/grpc-server:latest
+    container_name: grpc-server2
+    ports:
+      - "7171:7171"
+    environment:
+      - BIND_PORT=7171
+    networks:
+      thebytecloud:
+        ipv4_address: 172.20.0.4
+
+  grpc-client:
+    build:
+      context: .
+      dockerfile: client.docker
+    image: thebytecloud/grpc-client:latest
+    container_name: grpc-client
+    depends_on:
+      - haproxy
+    environment:
+      - SERVER=172.20.0.2
+      - SERVER_PORT=8000
+    networks:
+      thebytecloud:
+        ipv4_address: 172.20.0.11
+
