@@ -19,6 +19,7 @@ public class CalculatorServer {
         final Server server = ServerBuilder.forPort(serverBindPort)
                 .addService(new CalculatorServiceImpl())
                 .addService(new GreetingServiceImpl())
+                .
                 .build();
 
         System.out.println("Stating gRPC Server...!");
